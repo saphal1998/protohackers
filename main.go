@@ -9,19 +9,21 @@ func handleConnection(conn net.Conn) {
 	defer conn.Close()
 
 	data := make([]byte, 1024)
+	output_data := make([]byte, 0)
 	for {
 		_, err := conn.Read(data)
 		if err != nil {
 			log.Printf("Something went wrong reading from connection: %s", err)
 			break
 		}
-		_, err = conn.Write(data)
-		if err != nil {
-			log.Printf("Something went wrong writing to connection: %s", err)
-			break
-		}
+		output_data = append(output_data, data...)
 	}
 
+	_, err := conn.Write(output_data)
+	if err != nil {
+		log.Printf("Something went wrong writing to connection: %s", err)
+	}
+	return
 }
 
 func main() {
