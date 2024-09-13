@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io"
 	"log"
 	"net"
 )
@@ -11,12 +12,15 @@ func handleConnection(conn net.Conn) {
 	data := make([]byte, 1024)
 	output_data := make([]byte, 0)
 	for {
-		_, err := conn.Read(data)
+		n, err := conn.Read(data)
+		if err == io.EOF {
+			break
+		}
 		if err != nil {
 			log.Printf("Something went wrong reading from connection: %s", err)
 			break
 		}
-		output_data = append(output_data, data...)
+		output_data = append(output_data, data[:n]...)
 	}
 
 	_, err := conn.Write(output_data)
