@@ -6,6 +6,7 @@ import (
 	"log"
 	"net"
 	"runtime/debug"
+	"strconv"
 )
 
 const REQUEST_LENGTH = 9
@@ -143,7 +144,7 @@ func handleConnection(conn net.Conn) {
 			break
 		}
 
-		log.Printf("Recieved %v", string(buf))
+		log.Printf("Recieved %v", strconv.Quote(string(buf)))
 
 		request := NewRequest(buf)
 		response := request.response(s)
