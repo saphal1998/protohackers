@@ -79,7 +79,7 @@ func handleConnection(conn net.Conn) {
 	log.Printf("Received as object: %v", req)
 	number_is_prime := checkPrime(req.Number)
 	correct_response := response{
-		Method: "isPrime",
+		Method: req.Method,
 		Prime:  number_is_prime,
 	}
 
