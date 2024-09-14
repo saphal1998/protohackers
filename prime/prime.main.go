@@ -73,7 +73,7 @@ func handleConnection(conn net.Conn) {
 			log.Printf("Error marshalling response: %v", err)
 			return
 		}
-		log.Printf("Sending back: %v", correct_response)
+		log.Printf("Sending back: %v for %v", correct_response, req)
 
 		conn.Write(append(responseBytes, '\n'))
 	}
