@@ -2,6 +2,7 @@ package meanstoend
 
 import (
 	"encoding/binary"
+	"fmt"
 	"io"
 	"log"
 	"net"
@@ -134,7 +135,7 @@ func handleConnection(conn net.Conn) {
 
 	for {
 		buf := make([]byte, REQUEST_LENGTH)
-		_, err := io.ReadFull(conn, buf)
+		n, err := io.ReadFull(conn, buf)
 		if err != nil {
 			if err == io.EOF {
 				log.Println("Connection closed by client")
@@ -143,6 +144,7 @@ func handleConnection(conn net.Conn) {
 			log.Printf("Error reading from connection: %s", err)
 			break
 		}
+		assert(n == REQUEST_LENGTH, fmt.Sprintf("Did not read %s bytes", REQUEST_LENGTH))
 
 		log.Printf("Recieved %v", strconv.Quote(string(buf)))
 
