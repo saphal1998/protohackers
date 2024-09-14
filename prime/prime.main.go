@@ -39,6 +39,7 @@ func Prime() {
 }
 
 func handleConnection(conn net.Conn) {
+	log.Printf("Got connection: %v", conn.RemoteAddr())
 	defer conn.Close()
 
 	data := make([]byte, 1024)
