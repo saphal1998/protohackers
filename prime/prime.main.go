@@ -42,10 +42,10 @@ func Prime() {
 func handleConnection(conn net.Conn) {
 	log.Printf("Got connection: %v", conn.RemoteAddr())
 	defer conn.Close()
-	reader := bufio.NewReader(conn) // Use bufio for efficient reading
+	reader := bufio.NewReader(conn)
 
 	for {
-		message, err := reader.ReadString('\n') // Read until newline
+		message, err := reader.ReadString('\n')
 		if err != nil {
 			if err == io.EOF {
 				break
@@ -54,14 +54,14 @@ func handleConnection(conn net.Conn) {
 			return
 		}
 
-		// Process each JSON request one at a time
 		var req request
 		err = json.Unmarshal([]byte(message), &req)
 		if err != nil || req.Method != "isPrime" {
 			malformedResponse := []byte(`{"error": "malformed request"}\n`)
 			conn.Write(malformedResponse)
-			return // Disconnect the client after the malformed request
+			return
 		}
+		log.Printf("Received: %v", req)
 
 		number_is_prime := checkPrime(req.Number)
 		correct_response := response{Method: req.Method,
@@ -73,8 +73,9 @@ func handleConnection(conn net.Conn) {
 			log.Printf("Error marshalling response: %v", err)
 			return
 		}
+		log.Printf("Sending back: %v", correct_response)
 
-		conn.Write(append(responseBytes, '\n')) // Send response back with newline
+		conn.Write(append(responseBytes, '\n'))
 	}
 }
 
