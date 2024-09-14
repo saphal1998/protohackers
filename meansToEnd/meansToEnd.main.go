@@ -34,6 +34,8 @@ func (s *store) avg(k1, k2 int32) int32 {
 		}
 	}
 
+	log.Printf("avg(%v, %v), sum=%v, count%v", k1, k2, sum, count)
+
 	if count == 0 {
 		return 0
 	}
