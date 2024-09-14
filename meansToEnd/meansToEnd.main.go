@@ -145,10 +145,6 @@ func handleConnection(conn net.Conn) {
 		if err != nil {
 			log.Printf("Something went wrong writing to connection: %s", err)
 		}
-
-		if scanner.Bytes() != nil {
-			continue
-		}
 	}
 }
 
