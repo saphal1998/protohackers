@@ -54,6 +54,7 @@ func handleConnection(conn net.Conn) {
 		output_data = append(output_data, data[:n]...)
 	}
 
+	log.Printf("Received %v", output_data)
 	// We have the output data
 	var req request
 	err := json.Unmarshal(output_data, &req)
