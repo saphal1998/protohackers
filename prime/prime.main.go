@@ -6,6 +6,7 @@ import (
 	"log"
 	"math"
 	"net"
+	"strconv"
 )
 
 type request struct {
@@ -53,7 +54,7 @@ func handleConnection(conn net.Conn) {
 			log.Printf("Something went wrong reading from connection: %s", err)
 			break
 		}
-		log.Printf("Read %v bytes, %v", n, string(data))
+		log.Printf("Read %v bytes, %v", n, strconv.Quote(string(data)))
 		output_data = append(output_data, data[:n]...)
 		if data[len(data)-1] == '\n' {
 			break
