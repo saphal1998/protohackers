@@ -98,12 +98,13 @@ func handleConnection(conn net.Conn) {
 }
 
 func checkPrime(f float64) bool {
+	f = math.Abs(f)
 	number := int(f)
 	if number == 0 {
 		return true
 	}
 
-	if number <= 1 {
+	if number == 1 {
 		return false
 	}
 
