@@ -58,7 +58,7 @@ type request struct {
 }
 
 func (r *request) opType() rune {
-	assert(len(r.raw) != REQUEST_LENGTH, "Invalid request received")
+	assert(len(r.raw) == REQUEST_LENGTH, "Invalid request received")
 	op := rune(r.raw[0])
 	assert(op == 'I' || op == 'Q', "Invalid operation received")
 	return op
@@ -99,8 +99,8 @@ func (q *queryRequest) response(s store) []byte {
 }
 
 func (q *queryRequest) opType() rune {
-	assert(q.request.opType() == 'I', "Invalid query request opType")
-	return 'I'
+	assert(q.request.opType() == 'Q', "Invalid query request opType")
+	return 'Q'
 }
 
 func NewRequest(data []byte) Request {
@@ -144,7 +144,7 @@ func handleConnection(conn net.Conn) {
 			log.Printf("Error reading from connection: %s", err)
 			break
 		}
-		assert(n == REQUEST_LENGTH, fmt.Sprintf("Did not read %s bytes", REQUEST_LENGTH))
+		assert(n == REQUEST_LENGTH, fmt.Sprintf("Did not read %d bytes", REQUEST_LENGTH))
 
 		log.Printf("Recieved %v", strconv.Quote(string(buf)))
 
