@@ -1,6 +1,7 @@
 package meanstoend
 
 import (
+	"bufio"
 	"encoding/binary"
 	"fmt"
 	"io"
@@ -41,7 +42,7 @@ func (s *store) avg(k1, k2 int32) int32 {
 }
 
 func assert(condition bool, msg string) {
-	if condition {
+	if !condition {
 		debug.PrintStack()
 		log.Fatalf("Assertion Error: %s", msg)
 	}
@@ -131,22 +132,15 @@ func handleConnection(conn net.Conn) {
 	defer conn.Close()
 
 	var s store
-	data := make([]byte, 1024)
-	for {
-		n, err := conn.Read(data)
-		if err == io.EOF {
-			return
-		}
-		if err != nil {
-			log.Printf("Something went wrong reading from connection: %s", err)
-		}
-		assert(n == REQUEST_LENGTH, fmt.Sprintf("Malformed request: %s", string(data)))
-		log.Printf("Received %d bytes: %v", n, data[:n])
-
-		request := NewRequest(data[:n])
+	scanner := bufio.NewScanner(conn)
+	var buf []byte = make([]byte, 9)
+	scanner.Buffer(buf, 9)
+	for scanner.Scan() {
+		data := scanner.Bytes()
+		request := NewRequest(data)
 		response := request.response(s)
 
-		_, err = conn.Write(response)
+		_, err := conn.Write(response)
 		if err != nil {
 			log.Printf("Something went wrong writing to connection: %s", err)
 		}
