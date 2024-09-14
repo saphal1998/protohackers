@@ -131,17 +131,23 @@ func handleConnection(conn net.Conn) {
 
 	var s store
 	scanner := bufio.NewScanner(conn)
-	var buf []byte = make([]byte, 9)
-	scanner.Buffer(buf, 9)
+	var buf []byte = make([]byte, REQUEST_LENGTH)
+	scanner.Buffer(buf, REQUEST_LENGTH)
+
 	for scanner.Scan() {
 		data := scanner.Bytes()
 		log.Printf("Recieved %v", string(data))
+
 		request := NewRequest(data)
 		response := request.response(s)
 
 		_, err := conn.Write(response)
 		if err != nil {
 			log.Printf("Something went wrong writing to connection: %s", err)
+		}
+
+		if scanner.Bytes() != nil {
+			continue
 		}
 	}
 }
