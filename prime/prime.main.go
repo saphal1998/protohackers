@@ -63,30 +63,21 @@ func handleConnection(conn net.Conn) {
 		if err != nil {
 			log.Printf("Something went wrong when reading the payload: %s", err)
 		}
-		malformed_response := response{
-			Method: "isNotPrime",
-			Prime:  false,
-		}
-		response, err := json.Marshal(malformed_response)
-		if err != nil {
-			log.Printf("Something went wrong when writing back after receiving a malformed request from connection: %s", err)
-			return
-		}
-		_, err = conn.Write(response)
+		_, err = conn.Write([]byte{'\r', '\n'})
 		if err != nil {
 			log.Printf("Something went wrong writing to connection: %s", err)
 			return
 		}
 	}
 
-	log.Printf("%v", req)
+	log.Printf("Received as object: %v", req)
 	number_is_prime := checkPrime(req.Number)
 	correct_response := response{
 		Method: "isPrime",
 		Prime:  number_is_prime,
 	}
 
-	log.Printf("%v", correct_response)
+	log.Printf("Sending object: %v", correct_response)
 	response, err := json.Marshal(correct_response)
 	if err != nil {
 		log.Printf("Something went wrong when marshalling response: %s", err)
