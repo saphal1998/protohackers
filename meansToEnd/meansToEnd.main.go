@@ -7,7 +7,6 @@ import (
 	"log"
 	"net"
 	"runtime/debug"
-	"strconv"
 )
 
 const REQUEST_LENGTH = 9
