@@ -141,6 +141,7 @@ func handleConnection(conn net.Conn) {
 			log.Printf("Something went wrong reading from connection: %s", err)
 		}
 		assert(n == REQUEST_LENGTH, fmt.Sprintf("Malformed request: %s", string(data)))
+		log.Printf("Received %d bytes: %v", n, data[:n])
 
 		request := NewRequest(data[:n])
 		response := request.response(s)
