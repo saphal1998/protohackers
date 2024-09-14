@@ -80,6 +80,9 @@ func handleConnection(conn net.Conn) {
 }
 
 func checkPrime(f float64) bool {
+	if f != math.Floor(f) {
+		return false
+	}
 	number := int(f)
 
 	if number <= 1 {
