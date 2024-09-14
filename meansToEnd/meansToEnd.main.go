@@ -100,7 +100,7 @@ type queryRequest struct {
 func (q *queryRequest) response(s store) []byte {
 	avgPrice := s.avg(q.timestampStart, q.timestampEnd)
 	buffer := make([]byte, 4)
-	binary.NativeEndian.PutUint32(buffer[:4], uint32(avgPrice))
+	binary.BigEndian.PutUint32(buffer[:4], uint32(avgPrice))
 	return buffer
 }
 
