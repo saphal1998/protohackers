@@ -56,12 +56,12 @@ func handleConnection(conn net.Conn) {
 		}
 		log.Printf("Read %v bytes, %v", n, strconv.Quote(string(data)))
 		output_data = append(output_data, data[:n]...)
-		if data[len(data)-1] == '\n' {
+		if data[n-1] == '\n' {
 			break
 		}
 	}
 
-	log.Printf("Received %v", string(output_data))
+	log.Printf("Received %v", strconv.Quote(string(output_data)))
 	// We have the output data
 	var req request
 	err := json.Unmarshal(output_data, &req)
