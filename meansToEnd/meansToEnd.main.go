@@ -88,7 +88,7 @@ func (i *insertRequest) opType() rune {
 
 func (i *insertRequest) response(s store) []byte {
 	s.add(i.timestamp, i.price)
-	return []byte{'\r', '\n'}
+	return []byte{}
 }
 
 type queryRequest struct {
@@ -99,10 +99,8 @@ type queryRequest struct {
 
 func (q *queryRequest) response(s store) []byte {
 	avgPrice := s.avg(q.timestampStart, q.timestampEnd)
-	buffer := make([]byte, 6)
+	buffer := make([]byte, 4)
 	binary.NativeEndian.PutUint32(buffer[:4], uint32(avgPrice))
-	buffer[4] = '\r'
-	buffer[5] = '\n'
 	return buffer
 }
 
