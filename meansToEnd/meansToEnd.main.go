@@ -23,12 +23,12 @@ func (s *store) avg(k1, k2 int32) int32 {
 		return 0
 	}
 
-	var sum int32 = 0
-	var count int32 = 0
+	var sum int64 = 0
+	var count int64 = 0
 
 	for k := range s.rawData {
 		if k >= k1 && k <= k2 {
-			sum += s.rawData[k]
+			sum += int64(s.rawData[k])
 			count += 1
 		}
 	}
@@ -39,7 +39,7 @@ func (s *store) avg(k1, k2 int32) int32 {
 		return 0
 	}
 
-	return sum / count
+	return int32(sum / count)
 }
 
 func NewStore() store {
