@@ -7,7 +7,6 @@ import (
 	"log"
 	"math"
 	"net"
-	"strconv"
 )
 
 type request struct {
@@ -65,9 +64,8 @@ func handleConnection(conn net.Conn) {
 		}
 
 		number_is_prime := checkPrime(req.Number)
-		correct_response := response{
-			Method: req.Method,
-			Prime:  number_is_prime,
+		correct_response := response{Method: req.Method,
+			Prime: number_is_prime,
 		}
 
 		responseBytes, err := json.Marshal(correct_response)
