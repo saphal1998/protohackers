@@ -1,7 +1,9 @@
 package main
 
-import "protohackers/prime"
+import (
+	meanstoend "protohackers/meansToEnd"
+)
 
 func main() {
-	prime.Prime()
+	meanstoend.MeanToEnd()
 }
