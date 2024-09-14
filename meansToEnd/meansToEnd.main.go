@@ -137,6 +137,7 @@ func handleConnection(conn net.Conn) {
 	scanner.Buffer(buf, 9)
 	for scanner.Scan() {
 		data := scanner.Bytes()
+		log.Printf("Recieved %v", string(data))
 		request := NewRequest(data)
 		response := request.response(s)
 
