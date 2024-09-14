@@ -20,7 +20,7 @@ func (s *store) add(k, v int32) {
 }
 func (s *store) avg(k1, k2 int32) int32 {
 	if k1 > k2 {
-		return s.avg(k2, k1)
+		return 0
 	}
 
 	var sum int32 = 0
