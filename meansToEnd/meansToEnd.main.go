@@ -102,7 +102,8 @@ func (q *queryRequest) response(s store) []byte {
 	avgPrice := s.avg(q.timestampStart, q.timestampEnd)
 	buffer := make([]byte, 6)
 	binary.BigEndian.PutUint32(buffer[:4], uint32(avgPrice))
-	buffer = append(buffer, '\r', '\n')
+	buffer[4] = '\r'
+	buffer[5] = '\n'
 	return buffer
 }
 
