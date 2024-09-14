@@ -155,6 +155,7 @@ func handleConnection(conn net.Conn) {
 
 		request := NewRequest(buf)
 		response := request.response(s)
+		log.Printf("Sending %v for %v", strconv.Quote(string(response)), request)
 
 		_, err = conn.Write(response)
 		if err != nil {
