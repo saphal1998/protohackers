@@ -1,6 +1,7 @@
 package prime
 
 import (
+	"bufio"
 	"encoding/json"
 	"io"
 	"log"
@@ -42,59 +43,41 @@ func Prime() {
 func handleConnection(conn net.Conn) {
 	log.Printf("Got connection: %v", conn.RemoteAddr())
 	defer conn.Close()
+	reader := bufio.NewReader(conn) // Use bufio for efficient reading
 
-	data := make([]byte, 1024)
-	output_data := make([]byte, 0)
 	for {
-		n, err := conn.Read(data)
-		if err == io.EOF {
-			break
-		}
+		message, err := reader.ReadString('\n') // Read until newline
 		if err != nil {
-			log.Printf("Something went wrong reading from connection: %s", err)
-			break
-		}
-		output_data = append(output_data, data[:n]...)
-		if data[n-1] == '\n' {
-			break
-		}
-	}
-
-	log.Printf("Received %v", strconv.Quote(string(output_data)))
-	// We have the output data
-	var req request
-	err := json.Unmarshal(output_data, &req)
-	if err != nil || req.Method != "isPrime" {
-		if err != nil {
-			log.Printf("Something went wrong when reading the payload: %s", err)
-		}
-		_, err = conn.Write([]byte{'\r', '\n'})
-		if err != nil {
-			log.Printf("Something went wrong writing to connection: %s", err)
+			if err == io.EOF {
+				break
+			}
+			log.Printf("Error reading from connection: %v", err)
 			return
 		}
-		return
-	}
 
-	log.Printf("Received as object: %v", req)
-	number_is_prime := checkPrime(req.Number)
-	correct_response := response{
-		Method: req.Method,
-		Prime:  number_is_prime,
-	}
+		// Process each JSON request one at a time
+		var req request
+		err = json.Unmarshal([]byte(message), &req)
+		if err != nil || req.Method != "isPrime" {
+			malformedResponse := []byte(`{"error": "malformed request"}\n`)
+			conn.Write(malformedResponse)
+			return // Disconnect the client after the malformed request
+		}
 
-	log.Printf("Sending object: %v", correct_response)
-	response, err := json.Marshal(correct_response)
-	if err != nil {
-		log.Printf("Something went wrong when marshalling response: %s", err)
-		return
+		number_is_prime := checkPrime(req.Number)
+		correct_response := response{
+			Method: req.Method,
+			Prime:  number_is_prime,
+		}
+
+		responseBytes, err := json.Marshal(correct_response)
+		if err != nil {
+			log.Printf("Error marshalling response: %v", err)
+			return
+		}
+
+		conn.Write(append(responseBytes, '\n')) // Send response back with newline
 	}
-	_, err = conn.Write(response)
-	if err != nil {
-		log.Printf("Something went wrong writing correct response to connection: %s", err)
-		return
-	}
-	return
 }
 
 func checkPrime(f float64) bool {
