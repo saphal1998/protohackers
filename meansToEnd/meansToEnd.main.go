@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net"
+	"runtime/debug"
 )
 
 const REQUEST_LENGTH = 9
@@ -41,6 +42,7 @@ func (s *store) avg(k1, k2 int32) int32 {
 
 func assert(condition bool, msg string) {
 	if condition {
+		debug.PrintStack()
 		log.Fatalf("Assertion Error: %s", msg)
 	}
 }
