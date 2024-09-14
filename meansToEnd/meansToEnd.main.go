@@ -1,8 +1,8 @@
 package meanstoend
 
 import (
-	"bufio"
 	"encoding/binary"
+	"io"
 	"log"
 	"net"
 	"runtime/debug"
@@ -130,18 +130,25 @@ func handleConnection(conn net.Conn) {
 	defer conn.Close()
 
 	var s store
-	scanner := bufio.NewScanner(conn)
-	var buf []byte = make([]byte, REQUEST_LENGTH)
-	scanner.Buffer(buf, REQUEST_LENGTH)
 
-	for scanner.Scan() {
-		data := scanner.Bytes()
-		log.Printf("Recieved %v", string(data))
+	for {
+		buf := make([]byte, REQUEST_LENGTH)
+		_, err := io.ReadFull(conn, buf)
+		if err != nil {
+			if err == io.EOF {
+				log.Println("Connection closed by client")
+				break
+			}
+			log.Printf("Error reading from connection: %s", err)
+			break
+		}
 
-		request := NewRequest(data)
+		log.Printf("Recieved %v", string(buf))
+
+		request := NewRequest(buf)
 		response := request.response(s)
 
-		_, err := conn.Write(response)
+		_, err = conn.Write(response)
 		if err != nil {
 			log.Printf("Something went wrong writing to connection: %s", err)
 		}
