@@ -155,7 +155,7 @@ func handleConnection(conn net.Conn) {
 		}
 		assert(n == REQUEST_LENGTH, fmt.Sprintf("Did not read %d bytes", REQUEST_LENGTH))
 
-		log.Printf("Recieved %v", strconv.Quote(string(buf)))
+		log.Printf("Recieved %v", buf)
 
 		request := NewRequest(buf)
 		response := request.response(s)
