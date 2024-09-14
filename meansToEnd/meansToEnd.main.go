@@ -111,14 +111,14 @@ func NewRequest(data []byte) Request {
 	case 'I':
 		return &insertRequest{
 			request:   req,
-			timestamp: int32(binary.BigEndian.Uint32(req.raw[1:4])),
-			price:     int32(binary.BigEndian.Uint32(req.raw[4:8])),
+			timestamp: int32(binary.BigEndian.Uint32(req.raw[1:5])),
+			price:     int32(binary.BigEndian.Uint32(req.raw[5:9])),
 		}
 	case 'Q':
 		return &queryRequest{
 			request:        req,
-			timestampStart: int32(binary.BigEndian.Uint32(req.raw[1:4])),
-			timestampEnd:   int32(binary.BigEndian.Uint32(req.raw[4:8])),
+			timestampStart: int32(binary.BigEndian.Uint32(req.raw[1:5])),
+			timestampEnd:   int32(binary.BigEndian.Uint32(req.raw[5:9])),
 		}
 
 	default:
