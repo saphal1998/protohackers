@@ -73,6 +73,7 @@ func handleConnection(conn net.Conn) {
 			log.Printf("Something went wrong writing to connection: %s", err)
 			return
 		}
+		return
 	}
 
 	log.Printf("Received as object: %v", req)
