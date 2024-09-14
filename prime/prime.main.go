@@ -55,6 +55,9 @@ func handleConnection(conn net.Conn) {
 		}
 		log.Printf("Read %v bytes, %v", n, string(data))
 		output_data = append(output_data, data[:n]...)
+		if data[len(data)-1] == '\n' {
+			break
+		}
 	}
 
 	log.Printf("Received %v", string(output_data))
