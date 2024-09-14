@@ -67,7 +67,6 @@ type request struct {
 func (r *request) opType() rune {
 	assert(len(r.raw) == REQUEST_LENGTH, "Invalid request received")
 	op := rune(r.raw[0])
-	assert(op == 'I' || op == 'Q', "Invalid operation received")
 	return op
 }
 
@@ -128,10 +127,8 @@ func NewRequest(data []byte) Request {
 		}
 
 	default:
-		log.Fatalf("Invalid request received")
+		return nil
 	}
-
-	return nil
 }
 
 func handleConnection(conn net.Conn) {
@@ -155,6 +152,9 @@ func handleConnection(conn net.Conn) {
 		log.Printf("Recieved %v", buf)
 
 		request := NewRequest(buf)
+		if request == nil {
+			continue
+		}
 		response := request.response(s)
 		log.Printf("Sending %v for %v", response, request)
 
