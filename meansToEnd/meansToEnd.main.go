@@ -41,6 +41,12 @@ func (s *store) avg(k1, k2 int32) int32 {
 	return sum / count
 }
 
+func NewStore() store {
+	return store{
+		rawData: make(map[int32]int32),
+	}
+}
+
 func assert(condition bool, msg string) {
 	if !condition {
 		debug.PrintStack()
@@ -131,7 +137,7 @@ func NewRequest(data []byte) Request {
 func handleConnection(conn net.Conn) {
 	defer conn.Close()
 
-	var s store
+	s := NewStore()
 
 	for {
 		buf := make([]byte, REQUEST_LENGTH)
