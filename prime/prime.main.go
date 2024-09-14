@@ -19,6 +19,7 @@ type response struct {
 }
 
 func Prime() {
+	log.Println("Executing PRIME")
 	listener, err := net.Listen("tcp", ":5001")
 
 	if err != nil {

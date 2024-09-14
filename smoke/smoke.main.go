@@ -31,6 +31,7 @@ func handleConnection(conn net.Conn) {
 }
 
 func Smoke() {
+	log.Println("Executing SMOKE")
 	listener, err := net.Listen("tcp", ":5001")
 
 	if err != nil {
