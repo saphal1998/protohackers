@@ -61,7 +61,6 @@ func handleConnection(conn net.Conn) {
 			conn.Write(malformedResponse)
 			return
 		}
-		log.Printf("Received: %v", req)
 
 		number_is_prime := checkPrime(req.Number)
 		correct_response := response{Method: req.Method,
