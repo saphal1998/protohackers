@@ -54,7 +54,6 @@ func handleConnection(conn net.Conn) {
 			log.Printf("Something went wrong reading from connection: %s", err)
 			break
 		}
-		log.Printf("Read %v bytes, %v", n, strconv.Quote(string(data)))
 		output_data = append(output_data, data[:n]...)
 		if data[n-1] == '\n' {
 			break
