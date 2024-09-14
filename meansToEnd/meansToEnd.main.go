@@ -140,7 +140,7 @@ func handleConnection(conn net.Conn) {
 		}
 		assert(n == REQUEST_LENGTH, fmt.Sprintf("Malformed request: %s", string(data)))
 
-		request := NewRequest(data)
+		request := NewRequest(data[:n])
 		response := request.response(s)
 
 		_, err = conn.Write(response)
