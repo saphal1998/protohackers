@@ -3,8 +3,6 @@ package meanstoend
 import (
 	"bufio"
 	"encoding/binary"
-	"fmt"
-	"io"
 	"log"
 	"net"
 	"runtime/debug"
