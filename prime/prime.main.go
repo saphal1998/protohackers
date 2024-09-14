@@ -10,8 +10,8 @@ import (
 )
 
 type request struct {
-	Method string  `json:"method"`
-	Number float64 `json:"number"`
+	Method *string  `json:"method"`
+	Number *float64 `json:"number"`
 }
 
 type response struct {
@@ -56,14 +56,14 @@ func handleConnection(conn net.Conn) {
 
 		var req request
 		err = json.Unmarshal([]byte(message), &req)
-		if err != nil || req.Method != "isPrime" {
+		if err != nil || req.Method == nil || req.Number == nil || *req.Method != "isPrime" {
 			malformedResponse := []byte(`{"error": "malformed request"}\n`)
 			conn.Write(malformedResponse)
 			return
 		}
 
-		number_is_prime := checkPrime(req.Number)
-		correct_response := response{Method: req.Method,
+		number_is_prime := checkPrime(*req.Number)
+		correct_response := response{Method: *req.Method,
 			Prime: number_is_prime,
 		}
 
